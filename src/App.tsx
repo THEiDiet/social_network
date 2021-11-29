@@ -1,34 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {Accordeon} from "./components/accordeon/Accordeon";
+import { Rating } from './components/rating/Rating';
 
 function App() {
+    console.log('App will be render')
     return (
         <div className="App">
-            <h1>Hello</h1>
-        </div>
-    );
-}
-function Ration () {
-    return (
-        <div>
-            <div>star</div>
-            <div>star</div>
-            <div>star</div>
-            <div>star</div>
-            <div>star</div>
+            <AppTitle title={'Hello'}/>
+            <AppTitle title={'or hi'}/>
+            <Accordeon title={'This is my title'}/>
+            <Accordeon title={'This is my title too'}/>
+            <Rating value={0}/>
+            <Rating value={1}/>
+            <Rating value={2}/>
+            <Rating value={3}/>
+            <Rating value={4}/>
+            <Rating value={5}/>
         </div>
     )
 }
-let Accordeon = () => {
+function AppTitle(props:any){
     return (
-        <div>
-            <ul>
-                <li>1</li>
-                <li>2</li>
-                <li>3</li>
-            </ul>
-        </div>
+        <h1>{props.title}</h1>
     )
 }
 
