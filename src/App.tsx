@@ -9,8 +9,8 @@ function App() {
         <div className="App">
             <AppTitle title={'Hello'}/>
             <AppTitle title={'or hi'}/>
-            <Accordeon title={'This is my title'}/>
-            <Accordeon title={'This is my title too'}/>
+            <Accordeon title={'Menu'} collapsed={true}/>
+            <Accordeon title={'Users'} collapsed={false}/>
             <Rating value={0}/>
             <Rating value={1}/>
             <Rating value={2}/>
@@ -20,7 +20,10 @@ function App() {
         </div>
     )
 }
-function AppTitle(props:any){
+type AppTitlePropsType = {
+    title:string
+}
+function AppTitle(props:AppTitlePropsType){
     return (
         <h1>{props.title}</h1>
     )
