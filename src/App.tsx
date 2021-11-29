@@ -1,15 +1,17 @@
 import React from 'react';
 import './App.css';
-import {Rating} from "./components/rating/Rating";
-import {Accordeon} from "./components/accordeon/Accordeon";
+import Header from "./components/Header/Header";
+import Navigation from "./components/Navigation/Navigation";
+import Main from "./components/Main/Main";
+import Footer from "./components/Footer/Footer";
 
 function App() {
     return (
         <div className="wrapper">
-            <Rating value={3}/>
-            <Rating value={4}/>
-            <Accordeon title={'Hey'} collapsed={true}/>
-            <Accordeon title={'Hi'} collapsed={false}/>
+            <Header/>
+            <Navigation/>
+            <Main/>
+            <Footer/>
         </div>
     )
 }
