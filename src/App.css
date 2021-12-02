@@ -1,8 +1,4 @@
-body{
-    margin: 0;
-    padding: 0;
 
-}
 a{
     text-decoration: none;
     color: inherit;
@@ -34,6 +30,7 @@ ul{
 .main{
     grid-area: m;
 }
+
 
 .footer{
     background: #77c5ae;
