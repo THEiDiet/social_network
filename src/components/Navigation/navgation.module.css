@@ -1,0 +1,8 @@
+.nav {
+    grid-area: n;
+    background: #2e485b;
+}
+
+.active {
+    color: #21e7b6;
+}
