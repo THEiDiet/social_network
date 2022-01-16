@@ -1,37 +1,36 @@
 import React from "react";
 import s from "./posts.module.css";
 import {Post} from "./Post/Post";
-import {PostsPropsType} from "../Main";
-import {addPostAC, changePostAC} from "../../state/profileReducer";
+import {PostType} from "../../state/profileReducer";
 
+export type PostsPresentType = {
+    posts: PostType[]
+    newMessage: string
+    addPostCB: ()=>void
+    changePostCB: (post:string)=>void
+}
 
-
-const Posts:React.FC<PostsPropsType> = (props) => {
+const Posts:React.FC<PostsPresentType> = ({newMessage,posts,changePostCB,addPostCB}) => {
 
     const myRef:React.LegacyRef<HTMLTextAreaElement> = React.createRef()
 
-    const addPostCB = () => {
-        if (myRef?.current?.value){
-            props.dispatch(addPostAC())
-            myRef.current.value = ''
-        } else {
-            alert('Ты ничего не ввел, что отправить хочешь?')
-        }
+    const addPost = () => {
+        addPostCB()
     }
 
-    const changePostCB = () => {
+    const changePost = () => {
         if (myRef?.current?.value){
-            props.dispatch(changePostAC(myRef.current.value))
+            changePostCB(myRef.current.value)
         }
     }
 
     return (
         <div className={s.posts}>
-            <textarea className={s.textarea} ref={myRef} value={props.message} onChange={changePostCB}/>
-            <button className={s.button} onClick={addPostCB} >Send</button>
-            {props.posts.map(post => {
+            <textarea className={s.textarea} ref={myRef} value={newMessage} onChange={changePost}/>
+            <button className={s.button} onClick={addPost} >Send</button>
+            {posts.map(post => {
                 return (
-                    <Post key={post.id} message={post.message} id={post.id}/>
+                    <Post _id={post._id} message={post.message}/>
                 )
             })}
         </div>

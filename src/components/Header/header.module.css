@@ -1,4 +1,28 @@
+.view {
+    display: grid;
+    grid-template-areas: 'h h' 'n m' ;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 1fr 12fr;
+    width: 100%;
+    min-height: 100vh;
+}
+.header {
+    grid-area: h;
+    background: #223848;
+    display: flex;
+    justify-content: space-between;
+}
 .logo {
     padding: 10px;
 
+}
+
+.sidebar {
+    grid-area: n;
+    background: #395365;
+}
+.content {
+    grid-area: m;
+    background: #223848;
+    height: 100%;
 }

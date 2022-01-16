@@ -1,37 +1,30 @@
 import React from 'react';
 import './App.css';
-import Header from "./components/Header/Header";
-import Navigation from "./components/Navigation/Navigation";
-import {BrowserRouter , Route, Routes} from "react-router-dom";
-import Main from "./components/Main/Main";
-import Messages from "./components/Dialogs/Messages";
-import {StateType} from "./components/state/state";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import Error404 from "./components/NotFound/NotFound";
+import MessagesContainer from "./components/Dialogs/MessagesContainer";
+import {AppStateType} from "./components/state/reduxStore";
+import UsersContainer from "./components/Users/UsersContainer";
+import MainContainer from "./components/Main/MainContainer";
+import HeaderContainer from "./components/Header/Header";
+import Login from "./components/Login/Login";
 
-type AppPropsType = {
-    state: StateType,
-    dispatch: (action: any) => void
-}
 
-const App:React.FC<AppPropsType> = (props) => {
+
+const App: React.FC = () => {
     return (
         <BrowserRouter>
             <div className="wrapper">
-                <Header/>
-                <Navigation/>
-                <div className='content'>
-                    <Routes>
-                        <Route path="/dialogs" element={<Messages dialogs={props.state.dialogsPage.dialogs}
-                                                                  users={props.state.dialogsPage.users}
-                                                                  dispatch={props.dispatch}
-                                                                  text={props.state.dialogsPage.newText}/>}/>
-                        <Route path="/" element={<Main message={props.state.mainPage.newMessage}
-                                                       posts={props.state.mainPage.posts}
-                                                       dispatch={props.dispatch}
-                        />}/>
+                <Routes>
+                    <Route path='/' element={<HeaderContainer/>}>
+                        <Route index element={<Navigate to={'/15849'}/>}/>
+                        <Route path="/dialogs" element={<MessagesContainer/>}/>
+                        <Route path="/:userId" element={<MainContainer/>}/>
                         <Route path="*" element={<Error404/>}/>
-                    </Routes>
-                </div>
+                        <Route path="/users" element={<UsersContainer/>}/>
+                        <Route path="/login" element={<Login/>}/>
+                    </Route>
+                </Routes>
             </div>
         </BrowserRouter>
     )

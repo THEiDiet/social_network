@@ -1,23 +1,25 @@
 import React from "react";
 import s from "./main.module.css";
 import ProfileInfo from "./Profile/ProfileInfo";
-import Posts from "./Posts/Posts";
-import {PostItemType} from "../../components/state/state";
+import { ProfileType} from "../state/profileReducer";
+import PostsContainer from "./Posts/PostsContainer";
+import {InitialStateAuthType} from "../state/authReducer";
 
-export type PostsPropsType = {
-    posts: Array<PostItemType>
-    message: string
-    dispatch: (action: any) => void
+
+export type PostsContainerPropsType = {
+    profile: ProfileType
+    auth:InitialStateAuthType
 }
 
-const Main:React.FC<PostsPropsType> = (props) => {
+const Main: React.FC<PostsContainerPropsType> = ({profile,auth,...props}) => {
+
     return (
         <main className={s.main}>
             <img className={s.bg_img}
                  src="https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg"
                  alt="bg"/>
-            <ProfileInfo/>
-            <Posts posts={props.posts} message={props.message} dispatch={props.dispatch}/>
+            <ProfileInfo profile={profile} auth={auth}/>
+            <PostsContainer/>
         </main>
     )
 }

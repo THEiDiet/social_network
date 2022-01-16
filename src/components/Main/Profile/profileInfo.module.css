@@ -5,7 +5,8 @@
     flex-direction: row;
 }
 .aboutMe__ava{
-    width: 80px;
+    width: 100px;
+    height: 100px;
     border-radius: 100%;
 }
 .aboutMe__desc {
@@ -20,4 +21,10 @@
 }
 .aboutMe__text{
 
+}
+.hiddenBtn {
+    display: none;
+}
+.changeUserInfoBtn {
+    display: block;
 }

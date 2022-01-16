@@ -1,19 +1,19 @@
 import React from "react";
 import s from './userItem.module.css'
 import {NavLink} from "react-router-dom";
-import { UserType} from "../../../components/state/state";
+import { UserType } from "../../../components/state/dialogsReducer";
 
 type UserPropsType = {
-    users: Array<UserType>
+    users: UserType[]
 }
 
-const UserItem:React.FC<UserPropsType> = (props) => {
+const UserItem:React.FC<UserPropsType> = ({users}) => {
     return (
             <div>
                 {
-                    props.users.map(u => {
+                    users.map(u => {
                         return (
-                            <div className={s.user}><NavLink to={`/dialogs/${u.id}`}>{u.userName}</NavLink></div>
+                            <div key={u._id} className={s.user}><NavLink to={`/dialogs/${u._id}`}>{u.userName}</NavLink></div>
                         )
                     })
                 }

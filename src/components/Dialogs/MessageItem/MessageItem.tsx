@@ -1,17 +1,17 @@
 import React from "react";
 import s from './messageItem.module.css'
-import {DialogType} from "../../../components/state/state";
+import {DialogType} from "../../state/dialogsReducer";
 
 type MessagePropsType = {
-    dialogs: Array<DialogType>
+    dialogs: DialogType[]
 }
 
-const MessageItem:React.FC<MessagePropsType> = (props) => {
+const MessageItem:React.FC<MessagePropsType> = ({dialogs}) => {
     return (
         <div>
-            { props.dialogs.map(d => {
+            { dialogs.map(d => {
                 return (
-                    <div key={d.id} className={s.message}>{d.message}</div>
+                    <div key={d._id} className={s.message}>{d.message}</div>
                 )
             })}
         </div>

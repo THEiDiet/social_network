@@ -4,7 +4,7 @@ body{
     padding: 0;
     color: #849fb2;
     font-size: 14px;
-    font-family: Roboto;
+    font-family: Roboto, sans-serif;
 
 }
 a{
@@ -17,17 +17,8 @@ ul{
 .wrapper{
     width: 100%;
     height: 100vh;
-    display: grid;
-    grid-template-areas: 'h h' 'n m' ;
-    grid-template-columns: 1fr 5fr;
-    grid-template-rows: 1fr 10fr;
     position: relative;
     font-size: 1.2em;
-}
-
-.header{
-    grid-area: h;
-    background: #223848;
 }
 
 .nav{

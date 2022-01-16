@@ -1,17 +1,30 @@
 import React from "react";
 import {NavLink} from "react-router-dom";
 import s from './navgation.module.css'
-const Navigation =() => {
+
+type NavigationType = {
+    className:string
+}
+
+const Navigation = ({className}:NavigationType) => {
 
     return (
-        <nav className={s.nav}>
-            <ul>
-                <li><NavLink  to='/' className={({isActive})=> `${s.normal} ${isActive ? s.active :''}`}>Home</NavLink></li>
-                <li><NavLink to='/dialogs' className={({isActive})=> `${s.normal} ${isActive ? s.active :''}`} >Messages</NavLink></li>
-                <li><NavLink to='/people'>Friends</NavLink></li>
-                <li><NavLink to='/setting'>Settings</NavLink></li>
-            </ul>
-        </nav>
+            <nav className={className}>
+                <ul>
+                    <li><NavLink to='/'
+                                 className={({isActive}) => `${s.normal} ${isActive ? s.active : ''}`}>Home</NavLink>
+                    </li>
+                    <li><NavLink to='/dialogs'
+                                 className={({isActive}) => `${s.normal} ${isActive ? s.active : ''}`}>Messages</NavLink>
+                    </li>
+                    <li><NavLink to='/users'
+                                 className={({isActive}) => `${s.normal} ${isActive ? s.active : ''}`}>Friends</NavLink>
+                    </li>
+                    <li><NavLink to='/setting'
+                                 className={({isActive}) => `${s.normal} ${isActive ? s.active : ''}`}>Settings</NavLink>
+                    </li>
+                </ul>
+            </nav>
     )
 }
 

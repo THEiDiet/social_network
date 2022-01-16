@@ -2,23 +2,25 @@ import React, {ChangeEventHandler} from "react"
 import s from './dialogs.module.css'
 import MessageItem from "./MessageItem/MessageItem";
 import UserItem from "./UserItem/UserItem";
-import {DialogType, UserType} from "../../components/state/state";
-import {onChangeMessageAC, sendMessageAC} from "../state/dialogsReducer";
+import {DialogType, UserType} from "../state/dialogsReducer";
 
 
-type MessagesPropsType = {
-    dialogs: Array<DialogType>
-    users: Array<UserType>
-    dispatch:(action:any) => void
+export type MessagesPropsType = {
+    dialogs: DialogType[]
+    users: UserType[]
     text:string
+    sendMessageAC: ()=>void
+    onChangeMessageAC: (text:string)=>void
 }
 
-const Messages:React.FC<MessagesPropsType> = ({dialogs,users,dispatch,text}) => {
+const Messages:React.FC<MessagesPropsType> = ({dialogs,users,text,onChangeMessageAC,sendMessageAC}) => {
+    console.log(dialogs)
+    debugger
     const onChangeMessage:ChangeEventHandler<HTMLTextAreaElement> = (e):void => {
-        dispatch(onChangeMessageAC(e.currentTarget.value))
+        onChangeMessageAC(e.currentTarget.value)
     }
     const sendMessage =() => {
-        dispatch(sendMessageAC())
+        sendMessageAC()
     }
     return (
         <div className={s.dialogs_grid_wrapper}>
