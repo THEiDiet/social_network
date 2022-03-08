@@ -1,28 +1,32 @@
 .view {
-    display: grid;
-    grid-template-areas: 'h h' 'n m' ;
-    grid-template-columns: 1fr 4fr;
-    grid-template-rows: 1fr 12fr;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     min-height: 100vh;
+    height: 100%;
 }
 .header {
-    grid-area: h;
-    background: #223848;
     display: flex;
     justify-content: space-between;
+    background: #395365;
+    padding: 0 15px;
 }
 .logo {
     padding: 10px;
 
 }
-
-.sidebar {
-    grid-area: n;
-    background: #395365;
+.auth{
+    display: flex;
+    align-items: center;
+}
+.nickname{
+    display: inline-block;
+    margin-right: 20px;
 }
 .content {
-    grid-area: m;
+    flex: 1 0 auto;
     background: #223848;
+    min-height: 100%;
     height: 100%;
 }

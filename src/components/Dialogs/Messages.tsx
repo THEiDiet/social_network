@@ -1,26 +1,21 @@
-import React, {ChangeEventHandler} from "react"
+import React from "react"
 import s from './dialogs.module.css'
 import MessageItem from "./MessageItem/MessageItem";
 import UserItem from "./UserItem/UserItem";
 import {DialogType, UserType} from "../state/dialogsReducer";
+import NewMessageForm, {newMessageFormValuesType} from "../Forms/NewMessageForm";
 
 
 export type MessagesPropsType = {
     dialogs: DialogType[]
     users: UserType[]
-    text:string
-    sendMessageAC: ()=>void
-    onChangeMessageAC: (text:string)=>void
+    sendMessageAC: (message:string)=>void
 }
 
-const Messages:React.FC<MessagesPropsType> = ({dialogs,users,text,onChangeMessageAC,sendMessageAC}) => {
-    console.log(dialogs)
-    debugger
-    const onChangeMessage:ChangeEventHandler<HTMLTextAreaElement> = (e):void => {
-        onChangeMessageAC(e.currentTarget.value)
-    }
-    const sendMessage =() => {
-        sendMessageAC()
+const Messages:React.FC<MessagesPropsType> = ({dialogs,users,sendMessageAC}) => {
+
+    const sendMessage =(values:newMessageFormValuesType) => {
+        sendMessageAC(values.message)
     }
     return (
         <div className={s.dialogs_grid_wrapper}>
@@ -29,8 +24,7 @@ const Messages:React.FC<MessagesPropsType> = ({dialogs,users,text,onChangeMessag
             </div>
             <div className={s.messages_wrapper}>
                 <MessageItem dialogs={dialogs}/>
-                <textarea value={text} onChange={onChangeMessage}/>
-                <button onClick={sendMessage}>send</button>
+                <NewMessageForm onSendMessage={sendMessage}/>
             </div>
         </div>
     )

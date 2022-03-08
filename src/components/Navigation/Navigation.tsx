@@ -1,30 +1,29 @@
 import React from "react";
 import {NavLink} from "react-router-dom";
-import s from './navgation.module.css'
+import s from './navgation.module.scss'
+import {WithRedirect} from "../hoc/WithAuthRedirect";
 
 type NavigationType = {
-    className:string
+    className?:string
 }
 
 const Navigation = ({className}:NavigationType) => {
-
+    const finalClassName = `${s.nav} ${className ? className : ''}`
     return (
-            <nav className={className}>
-                <ul>
+            <ul className={finalClassName}>
                     <li><NavLink to='/'
-                                 className={({isActive}) => `${s.normal} ${isActive ? s.active : ''}`}>Home</NavLink>
+                                 className={({isActive}) => `${s.link} ${isActive ? s.link_active : ''}`}>Home</NavLink>
                     </li>
                     <li><NavLink to='/dialogs'
-                                 className={({isActive}) => `${s.normal} ${isActive ? s.active : ''}`}>Messages</NavLink>
+                                 className={({isActive}) => `${s.link} ${isActive ? s.link_active : ''}`}>Messages</NavLink>
                     </li>
                     <li><NavLink to='/users'
-                                 className={({isActive}) => `${s.normal} ${isActive ? s.active : ''}`}>Friends</NavLink>
+                                 className={({isActive}) => `${s.link} ${isActive ? s.link_active : ''}`}>Friends</NavLink>
                     </li>
                     <li><NavLink to='/setting'
-                                 className={({isActive}) => `${s.normal} ${isActive ? s.active : ''}`}>Settings</NavLink>
+                                 className={({isActive}) => `${s.link} ${isActive ? s.link_active : ''}`}>Settings</NavLink>
                     </li>
-                </ul>
-            </nav>
+            </ul>
     )
 }
 

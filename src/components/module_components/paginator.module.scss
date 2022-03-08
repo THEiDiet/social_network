@@ -1,0 +1,13 @@
+.pagesNumbers {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 5px 0 5px;
+}
+.pageNumber {
+    margin-left: 10px;
+    cursor: pointer;
+}
+.activePage {
+    font-weight: 700;
+    color: #b8dee7;
+}

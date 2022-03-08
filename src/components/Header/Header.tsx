@@ -1,44 +1,48 @@
 import React, {useEffect} from "react";
 import s from "./header.module.css"
 import logo from './../../assets/logo.png'
-import {connect} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../state/reduxStore";
-import {setAuthUserTC} from "../state/authReducer";
+import {logoutUserTC, setAuthUserTC} from "../state/authReducer";
 import Navigation from "../Navigation/Navigation";
-import {Outlet} from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
+import {getAuthIsAuth, getAuthLogin} from "../state/authSelect";
+import {Button} from "@mui/material";
 
-type HeaderContainerType = {
-    login: string | null
-    isAuth: boolean
-    setAuthUserTC:()=>void
-}
+
 
 type HeaderType = {
     login: string | null
     isAuth: boolean
+    logoutUserTC:()=>void
 }
 
-const HeaderContainer = ({login, isAuth,setAuthUserTC}: HeaderContainerType) => {
+    // useEffect(() => {
+    //     setAuthUserTC()
+    // }, [isAuth])
 
+export const Header = () => {
+    const dispatch = useDispatch()
+    const isAuth = useSelector((state:AppStateType) => state.auth.isAuth)
+    const onLogoutHandler = ()=>{
+        dispatch(logoutUserTC())
+    }
+    const nickname = useSelector((state:AppStateType)=> state.auth.login)
     useEffect(() => {
-        setAuthUserTC()
+        dispatch(setAuthUserTC())
     }, [isAuth])
-
-    return <Header login={login} isAuth={isAuth}/>
-}
-
-const Header = ({login, isAuth}: HeaderType) => {
     return <div className={s.view}>
         <header className={s.header}>
             <img className={s.logo} src={logo} alt=""/>
-            <div>{isAuth ? login : 'Login'}</div>
+            <Navigation />
+            <div className={s.auth}>
+                {
+                    isAuth
+                    ? <div><span className={s.nickname}>{nickname}</span><Button onClick={onLogoutHandler}>Logout</Button></div>
+                    : <Button onClick={()=>window.location.replace('/login')}>Login</Button>
+                }
+            </div>
         </header>
-        <Navigation className={s.sidebar}/>
         <div className={s.content}><Outlet/></div>
     </div>
 }
-const mStP = (state: AppStateType) => ({
-    login: state.auth.login,
-    isAuth: state.auth.isAuth
-})
-export default connect(mStP, {setAuthUserTC})(HeaderContainer)

@@ -1,6 +1,7 @@
 import axios from "axios";
-import {UserType} from "../state/usersReducer";
+import {FilterType, UserType} from "../state/usersReducer";
 import {ProfileType} from "../state/profileReducer";
+import {loginValuesType} from "../Forms/LoginForm";
 
 const instance = axios.create({
     withCredentials: true,
@@ -16,8 +17,8 @@ export type SetUsersPromiseType = {
     error: string
 }
 export const usersAPI = {
-    setUsers(currentPage: number, pagesCount: number):any  {
-        return  instance.get(`users?page=${currentPage}&count=${pagesCount}`).then(res => res.data)
+    async setUsers(currentPage: number = 1, pagesCount: number = 10,filter:FilterType) {
+        return await instance.get(`users?page=${currentPage}&count=${pagesCount}${filter.term !== '' ? `&term=${filter.term}`: ''}${filter.friend !== null ? `&friend=${filter.friend}`: ''}`).then(res => res.data)
     },
     unfollowUser(userId:number) {
         return instance.delete(`follow/${userId}`).then(res => res.data)
@@ -41,16 +42,24 @@ export const profileAPI = {
             }
         })
     },
-    async getStatus(userId:number){
-        return await instance.get(`profile/status/${userId}`).then(res => res.data)
+    getStatus(userId:string){
+        return instance.get(`profile/status/${userId}`).then(res => res.data)
     },
-    async setStatus(status:string){
-        return await  instance.put(`profile/status`, {status}).then(res => res.data)
+    async updateStatus(status:string){
+        return await instance.put(`profile/status`, {status:status}).then(res => res)
     }
 }
 export const authAPI = {
     me() {
         return instance.get(`auth/me`).then(res => res.data)
-
+    },
+    login(values:loginValuesType){
+        return instance.post(`auth/login`,values).then(res => res.data)
+    },
+    captcha(){
+        return instance.get(`security/get-captcha-url`).then(res => res.data)
+    },
+    logout (){
+        return instance.delete('auth/login').then(res=> res.data)
     }
 }

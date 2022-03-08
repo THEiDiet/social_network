@@ -1,8 +1,8 @@
 import {Dispatch} from "redux";
 import {SetUsersPromiseType, usersAPI} from "../api/api";
-import {getStateType} from "../../types/common";
 import {AppStateType} from "./reduxStore";
 import {ThunkAction} from "redux-thunk";
+import {updateObjectInArray} from "../utils/objectHelpers";
 
 const FOLLOW = 'FOLLOW'
 const UNFOLLOW = 'UNFOLLOW'
@@ -11,6 +11,7 @@ const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT'
 const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE'
 const SET_IS_FETCHING = 'SET_IS_FETCHING'
 const SET_IS_DISABLED = 'SET_IS_DISABLED'
+const SET_FILTER = 'SET_FILTER'
 
 
 export type UserType = {
@@ -28,14 +29,24 @@ export type StateUsersType = {
     currentPage: number
     isFetching: boolean
     isDisabled: number[]
+    filter: {
+        term: string
+        friend: null | boolean
+    }
 }
+export type FilterType = typeof initialState.filter
+
 let initialState: StateUsersType = {
     users: [],
     totalUsersCount: 0,
-    pageSize: 5,
+    pageSize: 20,
     currentPage: 1,
     isFetching: false,
     isDisabled: [],
+    filter: {
+        term: '',
+        friend: null
+    }
 }
 
 export const usersReducer = (state = initialState, action: UsersActionsTypes) => {
@@ -43,12 +54,14 @@ export const usersReducer = (state = initialState, action: UsersActionsTypes) =>
         case FOLLOW:
             return {
                 ...state,
-                users: state.users.map(u => u.id === action.userId ? {...u, followed: true} : u)
+                users: updateObjectInArray(state.users,action.userId,'id',{followed: true} )
+                    // state.users.map(u => u.id === action.userId ? {...u, followed: true} : u)
             }
         case UNFOLLOW:
             return {
                 ...state,
-                users: state.users.map(u => u.id === action.userId ? {...u, followed: false} : u)
+                users: updateObjectInArray(state.users,action.userId,'id',{followed: false} )
+                // users: state.users.map(u => u.id === action.userId ? {...u, followed: false} : u)
             }
         case  SET_USERS:
             return {...state, users: [...action.users]}
@@ -59,7 +72,6 @@ export const usersReducer = (state = initialState, action: UsersActionsTypes) =>
         case  SET_IS_FETCHING:
             return {...state, isFetching: action.isFetching}
         case  SET_IS_DISABLED:
-            debugger
             return {
                 ...state,
                 isDisabled:
@@ -67,6 +79,8 @@ export const usersReducer = (state = initialState, action: UsersActionsTypes) =>
                         ? [...state.isDisabled, action.userId]
                         : state.isDisabled.filter(u => u !== action.userId)
             }
+        case  SET_FILTER:
+            return {...state, filter: action.payload}
         default:
             return state
     }
@@ -80,6 +94,7 @@ export type UsersActionsTypes =
     | SetCurrentPageType
     | SetIsFetchingType
     | SetIsDisabledType
+    | setFilterType
 
 export type FollowActionType = {
     type: typeof FOLLOW
@@ -110,6 +125,10 @@ export type SetIsDisabledType = {
     userId: number
     isFetching: boolean
 }
+export type setFilterType = {
+    type: typeof SET_FILTER
+    payload: FilterType
+}
 
 export const follow = (userId: number): FollowActionType => ({type: FOLLOW, userId})
 export const unFollow = (userId: number): UnfollowActionType => ({type: UNFOLLOW, userId})
@@ -125,29 +144,35 @@ export const setIsDisabled = (isFetching: boolean, userId: number): SetIsDisable
     isFetching,
     userId
 })
-type ThunkType = ThunkAction<any, AppStateType, unknown,UsersActionsTypes>
-export const getUsersTC = (currentPage: number, pageSize: number) => (dispatch: Dispatch<UsersActionsTypes>) => {
+export const setFilter = (filter: FilterType): setFilterType => ({
+    type: SET_FILTER,
+    payload: filter
+})
+
+
+type ThunkType = ThunkAction<any, AppStateType, unknown, UsersActionsTypes>
+
+export const getUsersTC = (currentPage: number, pageSize: number, filter: FilterType): ThunkType => (dispatch: Dispatch<UsersActionsTypes>) => {
     dispatch(setIsFetching(true))
     dispatch(setCurrentPage(currentPage))
-    usersAPI.setUsers(currentPage, pageSize).then((res: SetUsersPromiseType) => {
+    dispatch(setFilter(filter))
+    usersAPI.setUsers(currentPage, pageSize, filter).then((res: SetUsersPromiseType) => {
         dispatch(setTotalUsersCount(res.totalCount))
         dispatch(setUsers(res.items))
         dispatch(setIsFetching(false))
     })
 }
-
-export const followUserThunkCreator = (userId: number):ThunkType => (dispatch) => {
+const followUnfollowFlow = async (dispatch: Dispatch, userId: number, apiMethod: (id:number) => Promise<any>, actionCreator: any) => {
     dispatch(setIsDisabled(true, userId))
-    usersAPI.followUser(userId).then(res => {
-            res.resultCode === 0 && dispatch(follow(userId))
-            dispatch(setIsDisabled(false, userId))
-        }
-    )
+    let res = await apiMethod(userId)
+    res.resultCode === 0 && dispatch(actionCreator(userId))
+    dispatch(setIsDisabled(false, userId))
 }
-export const unFollowUserThunkCreator = (userId: number):ThunkType => (dispatch) => {
-    dispatch(setIsDisabled(true, userId))
-    usersAPI.unfollowUser(userId).then(res => {
-        res.resultCode === 0 && dispatch(unFollow(userId))
-        dispatch(setIsDisabled(false, userId))
-    })
+export const followUserThunkCreator = (userId: number): ThunkType => async (dispatch) => {
+    followUnfollowFlow(dispatch,userId,usersAPI.followUser.bind(usersAPI),follow)
+
+}
+export const unFollowUserThunkCreator = (userId: number): ThunkType => async (dispatch) => {
+    followUnfollowFlow(dispatch,userId,usersAPI.unfollowUser.bind(usersAPI),unFollow)
+
 }

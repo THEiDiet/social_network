@@ -1,39 +1,30 @@
 import React from "react";
-import s from "./posts.module.css";
+import s from "./posts.module.scss";
 import {Post} from "./Post/Post";
 import {PostType} from "../../state/profileReducer";
+import NewMessageForm, {newMessageFormValuesType} from "../../Forms/NewMessageForm";
+import ProfilePost from "../../module_components/ProfilePost";
 
 export type PostsPresentType = {
     posts: PostType[]
-    newMessage: string
-    addPostCB: ()=>void
-    changePostCB: (post:string)=>void
+    addPostCB: (post:string)=>void
+    toggleLikesCount:(userId:string,postId:string)=> void
 }
 
-const Posts:React.FC<PostsPresentType> = ({newMessage,posts,changePostCB,addPostCB}) => {
+const Posts:React.FC<PostsPresentType> = React.memo(({posts,addPostCB,toggleLikesCount}) => {
 
-    const myRef:React.LegacyRef<HTMLTextAreaElement> = React.createRef()
-
-    const addPost = () => {
-        addPostCB()
+    const addPost = (values:newMessageFormValuesType) => {
+        addPostCB(values.message)
     }
-
-    const changePost = () => {
-        if (myRef?.current?.value){
-            changePostCB(myRef.current.value)
-        }
-    }
-
     return (
         <div className={s.posts}>
-            <textarea className={s.textarea} ref={myRef} value={newMessage} onChange={changePost}/>
-            <button className={s.button} onClick={addPost} >Send</button>
+            <NewMessageForm onSendMessage={addPost}/>
             {posts.map(post => {
                 return (
-                    <Post _id={post._id} message={post.message}/>
+                    <ProfilePost key={post._id} post={post} toggleLikesCount={toggleLikesCount} className={s.post}/>
                 )
             })}
         </div>
     )
-}
+})
 export default Posts;

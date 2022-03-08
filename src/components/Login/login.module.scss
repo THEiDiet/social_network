@@ -1,0 +1,14 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+.captcha {
+    width: 100px;
+    height: 100px;
+    &__hidden {
+        display: none;
+    }
+}

@@ -1,9 +1,13 @@
 import React from 'react'
-import { UserType} from "../state/usersReducer";
+import {FilterType, UserType} from "../state/usersReducer";
 import s from './users.module.css'
 
 import avatarDefault from './../../assets/user.png'
 import {NavLink} from "react-router-dom";
+import {User} from "./User";
+import {UserCard} from "../module_components/UserCard";
+import SearchUsersForm from "../Forms/SearchUsersForm";
+import {Paginator} from "../module_components/Paginator";
 
 type UsersPropsType = {
     users: UserType[]
@@ -11,47 +15,32 @@ type UsersPropsType = {
     pageSize: number
     currentPage: number
     isDisabled: number[]
+    filter: FilterType
 
     setCurrentPage: (page: number) => void
     followUserThunkCreator: (userId: number) => void
     unFollowUserThunkCreator: (userId: number) => void
+    onFilterChanges: (filter: FilterType) => void
 }
 
-export const Users = (props: UsersPropsType) => {
-    const pages: number[] = []
-    // const pagesCount = Math.ceil(props.totalUsersCount / props.pageSize)
-    for (let i = 1; i <= 20; i++) {
-        pages.push(i)
-    }
-    const onFollow = (userId: number) => {
-        props.followUserThunkCreator(userId)
-    }
-    const onUnFollow = (userId: number) => {
-        props.unFollowUserThunkCreator(userId)
-    }
-    return (
-        <>
-        {pages.map(p => <span key={p} className={`${s.pageNumber} ${props.currentPage === p ? s.activePage : ''} `}
-                                  onClick={() => props.setCurrentPage(p)}>{p}
-                </span>)}
-            {props.users.map(u => <div key={u.id} className={s.userItem}>
-                <div>
-                    <NavLink to={`/${u.id}`}>
-                        <img className={s.avatar} src={u.photos.small ? u.photos.small : avatarDefault} alt={u.name}/>
-                    </NavLink>
-                    <div>{u.name}</div>
-                </div>
-                <div className={s.status}>{u.status}</div>
-                <div className={s.buttons}>
-                    {u.followed
-                        ? <button disabled={props.isDisabled.some(s => s === u.id)}
-                                  onClick={() => onUnFollow(u.id)}>unfollow</button>
-                        : <button disabled={props.isDisabled.some(s => s === u.id)}
-                                  onClick={() => onFollow(u.id)}>Follow</button>
-                    }
-                </div>
-            </div>)}
-        </>
-    )
-}
+export const Users = React.memo((props: UsersPropsType) => {
+              const onFollow = (userId: number) => {
+            props.followUserThunkCreator(userId)
+        }
+        const onUnFollow = (userId: number) => {
+            props.unFollowUserThunkCreator(userId)
+        }
 
+        return (
+            <div className={s.users}>
+                <SearchUsersForm onFilterChanges={props.onFilterChanges}/>
+                <Paginator setCurrentPage={props.setCurrentPage} page={props.currentPage} totalCount={props.totalUsersCount}/>
+                <div className={s.usersFlex}>
+                    {props.users.map(u => <div key={u.id} className={s.userItem}>
+                        <UserCard user={u} isDisabled={props.isDisabled} onUnFollow={onUnFollow} onFollow={onFollow}/>
+                    </div>)}
+                </div>
+            </div>
+        )
+    }
+)

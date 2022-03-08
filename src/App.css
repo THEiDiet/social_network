@@ -21,25 +21,3 @@ ul{
     font-size: 1.2em;
 }
 
-.nav{
-    grid-area: n;
-    background: #30413a;
-}
-
-.content{
-    grid-area: m;
-    background: #223848;
-    width: 100%;
-    height: 100%;
-}
-
-.footer{
-    background: #77c5ae;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 20px;
-    text-align: center;
-    color: #fff;
-}

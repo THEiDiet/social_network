@@ -1,6 +1,8 @@
-
+.sticky {
+    position: fixed;
+    z-index: 0;
+}
 .aboutMe{
-    padding: 20px;
     display: flex;
     flex-direction: row;
 }
